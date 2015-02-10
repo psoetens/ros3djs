@@ -9,7 +9,7 @@
  * @constructor
  * @param options - object with following keys:
  *
- *  * tfClient - a handle to the TF client
+ *  * tfClient (optional) - a handle to the TF client
  *  * frameID - the frame ID this object belongs to
  *  * pose (optional) - the pose associated with this object
  *  * object - the THREE 3D object to be rendered
@@ -17,7 +17,7 @@
 ROS3D.SceneNode = function(options) {
   options = options || {};
   var that = this;
-  var tfClient = options.tfClient;
+  var tfClient = options.tfClient || null;
   var frameID = options.frameID;
   var object = options.object;
   this.pose = options.pose || new ROSLIB.Pose();
@@ -43,7 +43,9 @@ ROS3D.SceneNode = function(options) {
   };
 
   // listen for TF updates
-  tfClient.subscribe(frameID, this.tfUpdate);
+  if (tfClient) {
+    tfClient.subscribe(frameID, this.tfUpdate);
+  }
 };
 ROS3D.SceneNode.prototype.__proto__ = THREE.Object3D.prototype;
 
@@ -60,5 +62,21 @@ ROS3D.SceneNode.prototype.updatePose = function(pose) {
 };
 
 ROS3D.SceneNode.prototype.unsubscribeTf = function() {
-  this.tfClient.unsubscribe(this.message.header.frame_id, this.tfUpdate);
+  if (this.tfClient) {
+    this.tfClient.unsubscribe(this.message.header.frame_id, this.tfUpdate);
+  }
+};
+
+/**
+ * Transform the pose of the associated model.
+ * @param transform - A ROS Transform like object which has a translation and orientation property.
+ */
+ROS3D.SceneNode.prototype.transformPose = function(transform) {
+  // apply the transform
+  var tf = new ROSLIB.Transform( transform );
+  var poseTransformed = new ROSLIB.Pose(this.pose);
+  poseTransformed.applyTransform(tf);
+
+  // update the world
+  this.updatePose(poseTransformed);
 };
