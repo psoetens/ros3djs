@@ -39,7 +39,8 @@ ROS3D.MarkerArrayClient = function(options) {
     ros : ros,
     name : topic,
     messageType : 'visualization_msgs/MarkerArray',
-    compression : 'png'
+    compression : 'png',
+    queue_length  : 2
   });
   
   arrayTopic.subscribe(function(arrayMessage) {
