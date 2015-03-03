@@ -83,7 +83,7 @@ ROS3D.Particles = function(options) {
         transparent: true, alphaTest: 0.5
     });
 
-    this.ps = new THREE.ParticleSystem( this.geom, this.shaderMaterial );
+    this.ps = new THREE.PointCloud( this.geom, this.shaderMaterial );
     this.sn = null;
 
     this.points = this.geom.vertices;

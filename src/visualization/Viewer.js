@@ -51,9 +51,8 @@ ROS3D.Viewer = function(options) {
 
   // create the global camera
   this.camera = new THREE.PerspectiveCamera(40, width / height, near, far);
-  this.camera.position.x = cameraPosition.x;
-  this.camera.position.y = cameraPosition.y;
-  this.camera.position.z = cameraPosition.z;
+  this.camera.position.set( cameraPosition.x, cameraPosition.y, cameraPosition.z );
+
   // add controls to the camera
   this.cameraControls = new ROS3D.OrbitControls({
     scene : this.scene,
@@ -89,7 +88,7 @@ ROS3D.Viewer = function(options) {
     that.cameraControls.update();
 
     // put light to the top-left of the camera
-    that.directionalLight.position = that.camera.localToWorld(new THREE.Vector3(-1, 1, 0));
+    that.directionalLight.position.copy( that.camera.localToWorld(new THREE.Vector3(-1, 1, 0)) );
     that.directionalLight.position.normalize();
 
     // set the scene
@@ -97,7 +96,7 @@ ROS3D.Viewer = function(options) {
     that.renderer.render(that.scene, that.camera);
 
     // render any mouseovers
-    that.highlighter.renderHighlight(that.renderer, that.scene, that.camera);
+    //that.highlighter.renderHighlight(that.renderer, that.scene, that.camera);
 
     // draw the frame
     requestAnimationFrame(draw);
