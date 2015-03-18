@@ -62,7 +62,7 @@ ROS3D.MarkerArrayClient = function(options) {
             loader : that.loader
           });
           that.markers[message.ns + message.id] = new ROS3D.SceneNode({
-            frameID : message.header.frame_id,
+            frameID : message.header.frame_id.replace(/^\//, ''),
             tfClient : that.tfClient,
             object : newMarker
           });
