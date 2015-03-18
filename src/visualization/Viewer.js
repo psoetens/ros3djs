@@ -96,7 +96,7 @@ ROS3D.Viewer = function(options) {
     that.renderer.render(that.scene, that.camera);
 
     // render any mouseovers
-    //that.highlighter.renderHighlight(that.renderer, that.scene, that.camera);
+    that.highlighter.renderHighlight(that.renderer, that.scene, that.camera);
 
     // draw the frame
     requestAnimationFrame(draw);
