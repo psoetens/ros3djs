@@ -46,18 +46,20 @@ ROS3D.Highlighter.prototype.onMouseOut = function(event) {
  * @param renderList - the list to add to
  */
 ROS3D.Highlighter.prototype.getWebglObjects = function(scene, objects, renderList) {
-  var objlist = scene.__webglObjects;
-  // get corresponding webgl objects
+  var objlist = scene.children;
+  // For each object, do a recursive search in scene's children
   for ( var c = 0; c < objects.length; c++) {
     if (objects[c]) {
       for ( var o = objlist.length - 1; o >= 0; o--) {
-        if (objlist[o].object === objects[c]) {
+        if (objlist[o] === objects[c]) {
           renderList.push(objlist[o]);
           break;
         }
+        else {
+          // recurse into children of the scene's content
+          this.getWebglObjects(objlist[o], objects, renderList);
+        }
       }
-      // recurse into children
-      this.getWebglObjects(scene, objects[c].children, renderList);
     }
   }
 };
@@ -90,11 +92,14 @@ ROS3D.Highlighter.prototype.renderHighlight = function(renderer, scene, camera) 
   });
 
   // swap render lists, render, undo
-  var oldWebglObjects = scene.__webglObjects;
-  scene.__webglObjects = renderList;
+  var oldChildren = scene.children;
+  scene.children = renderList;
+  // var oldWebglObjects = scene.__webglObjects;
+  // scene.__webglObjects = renderList;
 
   renderer.render(scene, camera);
 
-  scene.__webglObjects = oldWebglObjects;
+  scene.children = oldChildren;
+  //scene.__webglObjects = oldWebglObjects;
   scene.overrideMaterial = null;
 };
