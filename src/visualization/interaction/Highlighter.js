@@ -94,12 +94,9 @@ ROS3D.Highlighter.prototype.renderHighlight = function(renderer, scene, camera) 
   // swap render lists, render, undo
   var oldChildren = scene.children;
   scene.children = renderList;
-  // var oldWebglObjects = scene.__webglObjects;
-  // scene.__webglObjects = renderList;
 
   renderer.render(scene, camera);
 
   scene.children = oldChildren;
-  //scene.__webglObjects = oldWebglObjects;
   scene.overrideMaterial = null;
 };
