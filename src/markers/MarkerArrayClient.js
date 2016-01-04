@@ -73,9 +73,11 @@ ROS3D.MarkerArrayClient = function(options) {
         console.warn('Received marker message with deprecated action identifier "1"');
       }
       else if(message.action === 2) { // "DELETE"
-        that.markers[message.ns + message.id].unsubscribeTf();
-        that.rootObject.remove(that.markers[message.ns + message.id]);
-        delete that.markers[message.ns + message.id];
+        if(message.ns + message.id in that.markers) {
+          that.markers[message.ns + message.id].unsubscribeTf();
+          that.rootObject.remove(that.markers[message.ns + message.id]);
+          delete that.markers[message.ns + message.id];
+        }
       }
       else if(message.action === 3) { // "DELETE ALL"
         for (var m in that.markers){
